@@ -41,15 +41,11 @@ jobs:
       - name: Run international daily task
         run: python workbuddy_intl_daily.py
 
-      - name: Persist rotated international tokens
+      - name: Check international token cache
         if: ${{ always() && !cancelled() }}
         run: |
           if [ -f wb_intl_tokens.json ]; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add wb_intl_tokens.json
-            if ! git diff --cached --quiet; then
-              git commit -m "chore: update international token cache"
-              git push
-            fi
+            echo "Token cache exists; skipped Git commit because the file is ignored."
+          else
+            echo "Token cache was not generated."
           fi
